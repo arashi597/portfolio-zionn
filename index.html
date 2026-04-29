@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Zion Profile</title>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+<style>
+:root{
+  --color1:#6a5cff;
+  --color2:#a855f7;
+  --color3:#22c55e;
+  --bg-image:none;
+}
+
+*{box-sizing:border-box;}
+
+body{
+  margin:0;
+  font-family:Segoe UI;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  color:white;
+  background:#0b1020;
+  overflow-x:hidden;
+}
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:-50%;
+  background:conic-gradient(#6a5cff,#a855f7,#22c55e,#06b6d4,#f97316,#6a5cff);
+  filter:blur(120px);
+  opacity:.6;
+  animation:spin 20s linear infinite;
+  z-index:0;
+}
+
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:var(--bg-image) center/cover no-repeat;
+  opacity:.25;
+  z-index:0;
+}
+
+@keyframes spin{100%{transform:rotate(360deg)}}
+
+#stars{
+  position:fixed;
+  inset:0;
+  z-index:1;
+}
+
+/* CARD */
+.card{
+  margin-top:40px;
+  width:340px;
+  background:rgba(17,24,39,.7);
+  backdrop-filter:blur(14px);
+  border-radius:22px;
+  text-align:center;
+  z-index:2;
+  animation:float 4s ease-in-out infinite;
+}
+
+@keyframes float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-10px)}
+}
+
+.cover{
+  height:120px;
+  background:linear-gradient(120deg,#6a5cff,#a855f7,#22c55e);
+  background-size:200% 200%;
+  animation:move 6s infinite;
+}
+
+@keyframes move{
+  0%{background-position:0 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0 50%}
+}
+
+.profile{
+  width:120px;
+  height:120px;
+  margin:-60px auto 10px;
+  border-radius:50%;
+  position:relative;
+}
+
+.profile img{
+  width:100%;
+  height:100%;
+  border-radius:50%;
+  object-fit:cover;
+  border:3px solid #111827;
+}
+
+.badge{
+  position:absolute;
+  bottom:-6px;
+  right:-6px;
+  background:#a855f7;
+  padding:4px 6px;
+  font-size:10px;
+  border-radius:10px;
+}
+
+button{
+  margin:5px;
+  padding:6px 10px;
+  border:none;
+  border-radius:8px;
+  background:#a855f7;
+  color:white;
+  cursor:pointer;
+}
+
+.name{font-size:22px}
+.role{color:#a855f7;font-weight:bold}
+.tagline{color:#22c55e}
+.bio{font-size:13px;color:#cbd5e1;margin:10px}
+
+.socials a{
+  color:white;
+  margin:0 6px;
+  font-size:18px;
+}
+
+.links a{
+  display:inline-block;
+  margin:4px;
+  padding:6px 10px;
+  background:#1f2937;
+  color:white;
+  border-radius:8px;
+  text-decoration:none;
+}
+
+.clock{font-size:13px;color:#cbd5e1}
+
+/* DOGS */
+.dogs{
+  width:340px;
+  margin-top:20px;
+  z-index:2;
+}
+
+.dog-list{
+  max-height:260px;
+  overflow-y:auto;
+  padding:10px;
+  background:rgba(0,0,0,.2);
+  border-radius:12px;
+  font-size:13px;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="stars"></canvas>
+
+<div class="card">
+
+  <div class="cover"></div>
+
+  <div class="profile">
+    <img id="avatar">
+    <div class="badge">ZION GOD</div>
+  </div>
+
+  <input type="file" id="upload" hidden>
+  <button onclick="upload.click()">Change Profile Photo</button>
+
+  <div id="greet"></div>
+
+  <div class="name">Zion</div>
+  <div class="role">ZION • DEVELOPER</div>
+
+  <div class="bio">
+    I love music and coding creating different world.
+  </div>
+
+  <div class="tagline">Create your own reality.</div>
+
+  <div class="socials">
+    <a href="https://github.com/arashi597"><i class="fab fa-github"></i></a>
+    <a href="https://www.facebook.com/share/1Cv7Q153bW/"><i class="fab fa-facebook"></i></a>
+    <a href="https://www.instagram.com/zion_on_top?igsh=MTdqanB2ZG1yb3V6"><i class="fab fa-instagram"></i></a>
+  </div>
+
+  <div class="links">
+    <a href="https://github.com/arashi597">GitHub</a>
+    <a href="https://www.facebook.com/share/1Cv7Q153bW/">Facebook</a>
+    <a href="https://www.instagram.com/zion_on_top?igsh=MTdqanB2ZG1yb3V6">Instagram</a>
+  </div>
+
+  <div class="clock" id="clock"></div>
+</div>
+
+<div class="dogs">
+  <h3>My Dogs</h3>
+  <div class="dog-list" id="dogs"></div>
+</div>
+
+<script>
+
+/* IMAGE */
+const avatar=document.getElementById("avatar");
+const upload=document.getElementById("upload");
+
+avatar.src="0cc892779c6906811a69cd87333b648b.jpg";
+
+upload.onchange=e=>{
+const r=new FileReader();
+r.onload=()=>{
+avatar.src=r.result;
+};
+r.readAsDataURL(e.target.files[0]);
+};
+
+/* GREETING */
+function greet(){
+let h=new Date().getHours();
+if(h<12) return "Good Morning ☀️";
+if(h<18) return "Good Afternoon 🌤️";
+return "Good Evening 🌙";
+}
+document.getElementById("greet").innerText=greet();
+
+/* CLOCK */
+setInterval(()=>{
+document.getElementById("clock").innerText=new Date().toLocaleTimeString();
+},1000);
+
+/* DOG LIST FULL UPDATED */
+const dogs=[
+"talia dog","malha euz hussein","suprema mananabas","chitana dog",
+"jiya dark soul","xinc astranovich","yzayel dog",
+
+"yubatngay","jaydengay","crestt v coledog","ryder v coledog","cade v coledog",
+"chiya vk","ryu dog","ragnar dog","prime jethro","gaspardog",
+"natsumi dog","ainsley dog","chrollo dog","vell pepper","czier dog",
+"kreizho v luciano","mateo dog","wrax bossni","kyoshi hunnid",
+"boss kazu undefeated","tin neverbrokenagain","loonie ang delubyo",
+"kabbo st","øg freya","caed tarantado","hell schadenfreude",
+"og misaki apocalipsis","shia dog","hiroshi undefeated",
+"clyde esmael dog","senora yuna kruesteladog","kaize yeo",
+"guren bones dog","garou undefeated","sonec unli puyat",
+"tiwakal balagbag","aiden the strongest","mark neversleeping",
+"shena kunegagi","flux w triad","kazu w triad",
+"kaizu macapagal west","sk musashi","fveaa undefeated",
+"snow kunegagi","konrad lucian","karina i.s","shimon i.s"
+];
+
+document.getElementById("dogs").innerHTML=
+dogs.map(d=>`<div>${d}</div>`).join("");
+
+/* STARS */
+const c=stars.getContext("2d");
+stars.width=innerWidth;
+stars.height=innerHeight;
+
+let s=[...Array(100)].map(()=>({
+x:Math.random()*innerWidth,
+y:Math.random()*innerHeight,
+r:Math.random()*1.5
+}));
+
+function anim(){
+c.clearRect(0,0,stars.width,stars.height);
+c.fillStyle="#fff";
+s.forEach(p=>{
+c.beginPath();
+c.arc(p.x,p.y,p.r,0,Math.PI*2);
+c.fill();
+p.y+=1;
+if(p.y>stars.height)p.y=0;
+});
+requestAnimationFrame(anim);
+}
+anim();
+
+</script>
+
+</body>
+</html>
